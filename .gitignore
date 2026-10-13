@@ -1,0 +1,11 @@
+.venv-moshi/
+.venv/
+__pycache__/
+*.pyc
+.env
+.hf_token
+*.safetensors
+*.pt
+*.ckpt
+checkpoints/
+data/
