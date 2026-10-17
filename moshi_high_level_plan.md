@@ -20,9 +20,12 @@ Plan of action:
 
 •  Rent a single NVIDIA GPU instance and install moshi-finetune there . MIG is overkill for baseline - done
 
-•  Launch LoRA fine-tuning with kyutai-labs/moshi-finetune (approx 10-14 hrs training). It encodes both stereo streams into Mimi tokens. Suggested: rank 64–128, batch size 8–16, gradient_checkpointing=True for better GPU efficiency.
+•  Launch LoRA fine-tuning with kyutai-labs/moshi-finetune (approx 10-14 hrs training). It encodes both stereo streams into Mimi tokens. Suggested: rank 64–128, batch size 8–16, gradient_checkpointing=True for better GPU efficiency - done dry run
 
-•  Load adapters into Moshi’s PyTorch to finetune moshi instead of full training there by making base model frozen .  python -m moshi.server --base-model kyutai/moshiko-pytorch-bf16 --lora-path ./adapter.pt. Merge the base model with telugu adapter if results look promising. 
+•  Load adapters into Moshi’s PyTorch to finetune moshi instead of full training there by making base model frozen .  
+python -m moshi.server \
+  --lora-weight /path/to/lora.safetensors \
+  --config-path /path/to/config.json. Merge the base model with telugu adapter if results look promising. - done without merge for dry run 
 
 •  Test with a live microphone with moshi ui. Record screen capture for demo.
 

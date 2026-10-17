@@ -8,4 +8,5 @@ __pycache__/
 *.pt
 *.ckpt
 checkpoints/
+checkpoints.zip
 data/
