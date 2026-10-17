@@ -14,26 +14,26 @@ Plan of action:
 
 •  Baseline environment running; validate Mimi reproduces Telugu phonemes clearly at 24 kHz — done
 
-•  Gather 2–5 hours of dual-channel Telugu dialogue (separate agent/user tracks merged to stereo) - done
+•  Gather 2–5 hours of dual-channel Telugu dialogue (separate agent/user tracks merged to stereo) — partially done (smoke MVP: 40 train/10 eval clips created; true conversational turn-taking data still needed)
 
-•  Resample to 24 kHz. Build timestamped JSONL in the moshi-finetune annotator format. Use Indic-capable ASR and spot-check alignments before training (for sample training time stamps are fake so output will be gibberish) - done
+•  Resample to 24 kHz. Build timestamped JSONL in the moshi-finetune annotator format. Use Indic-capable ASR and spot-check alignments before training (for sample training time stamps are fake so output will be gibberish) — partially done (resampled & formatted with placeholder timestamps for dry run; real word-level ASR alignment remaining)
 
-•  Rent a single NVIDIA GPU instance and install moshi-finetune there . MIG is overkill for baseline - done
+•  Rent a single NVIDIA GPU instance and install moshi-finetune there . MIG is overkill for baseline — done (verified on RunPod A100)
 
-•  Launch LoRA fine-tuning with kyutai-labs/moshi-finetune (approx 10-14 hrs training). It encodes both stereo streams into Mimi tokens. Suggested: rank 64–128, batch size 8–16, gradient_checkpointing=True for better GPU efficiency - done dry run
+•  Launch LoRA fine-tuning with kyutai-labs/moshi-finetune (approx 10-14 hrs training). It encodes both stereo streams into Mimi tokens. Suggested: rank 64–128, batch size 8–16, gradient_checkpointing=True for better GPU efficiency — partially done (200-step smoke run completed to validate pipeline; full 10–14h training remaining)
 
 •  Load adapters into Moshi’s PyTorch to finetune moshi instead of full training there by making base model frozen .  
 python -m moshi.server \
   --lora-weight /path/to/lora.safetensors \
-  --config-path /path/to/config.json. Merge the base model with telugu adapter if results look promising. - done without merge for dry run 
+  --config-path /path/to/config.json. Merge the base model with telugu adapter if results look promising. — partially done (tested serving adapter via moshi.server & Gradio tunnel; weights merge pending full training)
 
-•  Test with a live microphone with moshi ui. Record screen capture for demo.
+•  Test with a live microphone with moshi ui. Record screen capture for demo. — partially done (verified live microphone input & Gradio tunnel connectivity; functional Telugu interaction pending proper data & training)
 
-•  Continuous pre-training / more SFT on several thousand hours to handle edge cases. That needs more data and GPU-hours (multi-GPU or a larger instance)
+•  Continuous pre-training / more SFT on several thousand hours to handle edge cases. That needs more data and GPU-hours (multi-GPU or a larger instance) - not done
 
-•  Further SFT from that checkpoint toward a stronger Telugu 7B. Stay on BF16 for this phase; FP8 is an optional later efficiency choice. Moshi is already multi-stream (text + audio codebooks).
+•  Further SFT from that checkpoint toward a stronger Telugu 7B. Stay on BF16 for this phase; FP8 is an optional later efficiency choice. Moshi is already multi-stream (text + audio codebooks) - not done
 
-•  Scale to other Indic languages.
+•  Scale to other Indic languages.  - not done
 
 
 
