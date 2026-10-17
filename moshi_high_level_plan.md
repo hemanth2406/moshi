@@ -14,11 +14,11 @@ Plan of action:
 
 •  Baseline environment running; validate Mimi reproduces Telugu phonemes clearly at 24 kHz — done
 
-•  Gather 20–50 hours of dual-channel Telugu dialogue (separate agent/user tracks merged to stereo).
+•  Gather 2–5 hours of dual-channel Telugu dialogue (separate agent/user tracks merged to stereo) - done
 
-•  Resample to 24 kHz. Build timestamped JSONL in the moshi-finetune annotator format. Use Indic-capable ASR and spot-check alignments before training.
+•  Resample to 24 kHz. Build timestamped JSONL in the moshi-finetune annotator format. Use Indic-capable ASR and spot-check alignments before training (for sample training time stamps are fake so output will be gibberish) - done
 
-•  Rent a single NVIDIA GPU instance and install moshi-finetune there (same step — not a second env on this laptop). MIG is overkill for baseline.
+•  Rent a single NVIDIA GPU instance and install moshi-finetune there . MIG is overkill for baseline - done
 
 •  Launch LoRA fine-tuning with kyutai-labs/moshi-finetune (approx 10-14 hrs training). It encodes both stereo streams into Mimi tokens. Suggested: rank 64–128, batch size 8–16, gradient_checkpointing=True for better GPU efficiency.
 
