@@ -16,7 +16,7 @@ Plan of action:
 
 •  Gather 2–5 hours of dual-channel Telugu dialogue (separate agent/user tracks merged to stereo) — partially done (smoke MVP: 40 train/10 eval clips; notebook now builds turn-taking stereo + Roman Telugu text; scale to 2–5 hours still needed)
 
-•  Resample to 24 kHz. Build timestamped JSONL in the moshi-finetune annotator format. Use AI4Bharat IndicXlit (`ai4bharat-transliteration`) to convert Telugu script → Roman Telugu for Moshi's Latin tokenizer; use Indic ASR / forced alignment for real word times (even spacing is interim) — partially done (romanization wired in `moshi_telugu.ipynb`; true ASR word times remaining)
+•  Resample to 24 kHz. Build timestamped JSONL in the moshi-finetune annotator format. Use AI4Bharat IndicXlit (`ai4bharat-transliteration`) for Telugu → Roman Telugu; WhisperX forced align (`language_code=te`) for real word times (even spacing only as fallback) — partially done (romanization + WhisperX wiring in `moshi_telugu.ipynb`; re-run Step 2 on Colab GPU to regenerate `stereo_mvp_roman_aligned`)
 
 •  Rent a single NVIDIA GPU instance and install moshi-finetune there . MIG is overkill for baseline — done (verified on RunPod A100)
 
