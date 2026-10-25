@@ -14,7 +14,7 @@ Plan of action:
 
 •  Baseline environment running; validate Mimi reproduces Telugu phonemes clearly at 24 kHz — done
 
-•  Gather 2–5 hours of dual-channel Telugu dialogue (separate agent/user tracks merged to stereo) — partially done (smoke MVP: 40 train/10 eval clips; notebook now builds turn-taking stereo + Roman Telugu text; scale to 2–5 hours still needed)
+•  Gather 2–5 hours of dual-channel Telugu dialogue (separate agent/user tracks merged to stereo) — partially done (notebook collects Conversation clips until `TARGET_HOURS` mono, then turn-taking Roman + WhisperX stereo; re-run Colab Step 1–2 at TARGET_HOURS=2–5, then retrain LoRA)
 
 •  Resample to 24 kHz. Build timestamped JSONL in the moshi-finetune annotator format. Use AI4Bharat IndicXlit (`ai4bharat-transliteration`) for Telugu → Roman Telugu; WhisperX forced align (`language_code=te`) for real word times (even spacing only as fallback) — partially done (romanization + WhisperX wiring in `moshi_telugu.ipynb`; re-run Step 2 on Colab GPU to regenerate `stereo_mvp_roman_aligned`)
 
