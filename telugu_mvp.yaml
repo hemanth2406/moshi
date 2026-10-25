@@ -1,11 +1,13 @@
-# data — Roman Telugu + WhisperX-aligned stereo (not old stereo_mvp)
+# Real MVP — Roman Telugu + WhisperX-aligned turn-taking stereo
+# Data folder must match Colab Step 2 output basename (stereo_roman_mvp).
+# After unzip to RunPod Volume, rewrite jsonl paths to /workspace/... then train.
 data:
-  eval_data: '/workspace/stereo_mvp_roman_aligned/eval.jsonl'
+  eval_data: '/workspace/stereo_roman_mvp/eval.jsonl'
   shuffle: true
-  train_data: '/workspace/stereo_mvp_roman_aligned/train.jsonl'
+  train_data: '/workspace/stereo_roman_mvp/train.jsonl'
 
 # model
-moshi_paths: 
+moshi_paths:
   hf_repo_id: "kyutai/moshiko-pytorch-bf16"
 
 full_finetuning: false # Activate lora.enable if partial finetuning
@@ -13,14 +15,14 @@ lora:
   enable: true # Set to False if full_finetuning is True
   rank: 64
   scaling: 2.
-  ft_embed: true # Optional, set to True if you want to finetune the embedding layer
+  ft_embed: false # Keep false for standard LoRA; true trains text embeddings (more params / risk)
 
 first_codebook_weight_multiplier: 100.
 text_padding_weight: .5
 
-# optim
+# optim — duration_sec must match notebook MAX_STEREO_SEC (pairs longer than this are dropped)
 duration_sec: 30
-batch_size: 2
+batch_size: 4
 max_steps: 2000
 gradient_checkpointing: true
 optim:
@@ -30,12 +32,11 @@ optim:
 
 # other
 seed: 0
-log_freq: 1
-eval_freq: 100
+log_freq: 10
+eval_freq: 200
 do_eval: false
 do_ckpt: true
 ckpt_freq: 200
-
 
 save_adapters: true # Must be False if full_finetuning is True
 

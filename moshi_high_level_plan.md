@@ -14,15 +14,22 @@ Plan of action:
 
 •  Baseline environment running; validate Mimi reproduces Telugu phonemes clearly at 24 kHz — done
 
-•  Gather 2–5 hours of dual-channel Telugu dialogue (separate agent/user tracks merged to stereo) — partially done (notebook collects Conversation clips until `TARGET_HOURS` mono, then turn-taking Roman + WhisperX stereo; re-run Colab Step 1–2 at TARGET_HOURS=2–5, then retrain LoRA)
+•  Gather dual-channel Telugu dialogue for a real MVP — in progress
+  - Colab `moshi_telugu.ipynb` Step 1: IndicVoices Conversation, 5–28 s, ≥3 words, `TARGET_HOURS=4.0` mono (~2 h stereo after pairing)
+  - Step 2: shuffle → turn-taking stereo → IndicXlit Roman → WhisperX `te` align (no even-spacing fallback)
+  - Drop pairs >30 s; write Drive `moshi_telugu/stereo_roman_mvp/`
 
-•  Resample to 24 kHz. Build timestamped JSONL in the moshi-finetune annotator format. Use AI4Bharat IndicXlit (`ai4bharat-transliteration`) for Telugu → Roman Telugu; WhisperX forced align (`language_code=te`) for real word times (even spacing only as fallback) — partially done (romanization + WhisperX wiring in `moshi_telugu.ipynb`; re-run Step 2 on Colab GPU to regenerate `stereo_mvp_roman_aligned`)
+•  Resample to 24 kHz. Build timestamped JSONL in the moshi-finetune annotator format. Roman via AI4Bharat IndicXlit; word times via WhisperX only — wired in notebook; re-run Step 1b → Restart → Step 1 → Step 2 on Colab GPU
 
 •  Rent a single NVIDIA GPU instance and install moshi-finetune there . MIG is overkill for baseline — done (verified on RunPod A100)
 
-•  Launch LoRA fine-tuning with kyutai-labs/moshi-finetune (approx 10-14 hrs training). It encodes both stereo streams into Mimi tokens. Suggested: rank 64–128, batch size 8–16, gradient_checkpointing=True for better GPU efficiency — partially done (200-step smoke run completed to validate pipeline; full 10–14h training remaining)
+•  Launch LoRA fine-tuning with kyutai-labs/moshi-finetune — next after new data
+  - Config: `telugu_mvp.yaml` (rank 64, ft_embed false, duration_sec 30, batch_size 4, max_steps 2000, do_eval false)
+  - Unzip to `/workspace/stereo_roman_mvp`, rewrite jsonl paths from Drive → `/workspace/stereo_roman_mvp/...`
+  - Train: `torchrun --nproc-per-node 1 -m train telugu_mvp.yaml`
+  - If OOM: set `batch_size: 2`
 
-•  Load adapters into Moshi’s PyTorch to finetune moshi instead of full training there by making base model frozen .  
+•  Load adapters into Moshi’s PyTorch to finetune moshi instead of full training there by making base model frozen .
 python -m moshi.server \
   --lora-weight /path/to/lora.safetensors \
   --config-path /path/to/config.json. Merge the base model with telugu adapter if results look promising. — partially done (tested serving adapter via moshi.server & Gradio tunnel; weights merge pending full training)
@@ -34,7 +41,3 @@ python -m moshi.server \
 •  Further SFT from that checkpoint toward a stronger Telugu 7B. Stay on BF16 for this phase; FP8 is an optional later efficiency choice. Moshi is already multi-stream (text + audio codebooks) - not done
 
 •  Scale to other Indic languages.  - not done
-
-
-
-
